@@ -46,7 +46,7 @@ st.markdown("This app predicts if a job posting is fake or legitimate based on k
 @st.cache_resource
 def train_model():
     # Fetch dataset
-    dataset_url = r"C:\Users\aniru\OneDrive\Desktop\Sem-I\DIC\Fake_job_posting\Fake_job_posting\fake_job_postings.csv"
+    dataset_url = "https://raw.githubusercontent.com/gitanirudh/Fake_job_posting/main/fake_job_postings.csv"
     df = pd.read_csv(dataset_url)
     
     # Preprocessing and training pipeline
