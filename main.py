@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 
-df = pd.read_csv(r"C:\Users\aniru\OneDrive\Desktop\Sem-I\DIC\Fake_job_posting\Fake_job_posting\fake_job_postings.csv")
+df = pd.read_csv(r"https://raw.githubusercontent.com/gitanirudh/Fake_job_posting/main/fake_job_postings.csv")
 
 
 # ## Understanding Dataset
