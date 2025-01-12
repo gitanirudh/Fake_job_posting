@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 
-df = pd.read_csv("../fake_job_postings.csv")
+df = pd.read_csv(r"C:\Users\aniru\OneDrive\Desktop\Sem-I\DIC\Fake_job_posting\Fake_job_posting\fake_job_postings.csv")
 
 
 # ## Understanding Dataset
@@ -205,51 +205,51 @@ print("Test target:", y_test.shape)
 # In[15]:
 
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score
+# from sklearn.tree import DecisionTreeClassifier
+# from sklearn.metrics import accuracy_score
 
-tree_model = DecisionTreeClassifier()
-tree_model.fit(X_train, y_train)
-y_pred_tree = tree_model.predict(X_test)
+# tree_model = DecisionTreeClassifier()
+# tree_model.fit(X_train, y_train)
+# y_pred_tree = tree_model.predict(X_test)
 
-tree_accuracy = accuracy_score(y_test, y_pred_tree)
-print(f"Decision Tree Accuracy: {tree_accuracy:.4f}")
+# tree_accuracy = accuracy_score(y_test, y_pred_tree)
+# print(f"Decision Tree Accuracy: {tree_accuracy:.4f}")
 
 
 # In[16]:
 
 
-from sklearn.metrics import confusion_matrix
+# from sklearn.metrics import confusion_matrix
 
-cm = confusion_matrix(y_test, y_pred_tree)
+# cm = confusion_matrix(y_test, y_pred_tree)
 
-# Plot confusion matrix heatmap
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.title('Confusion Matrix')
-plt.show()
+# # Plot confusion matrix heatmap
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
+# plt.xlabel('Predicted')
+# plt.ylabel('True')
+# plt.title('Confusion Matrix')
+# plt.show()
 
 
 # In[17]:
 
 
-from sklearn.metrics import roc_curve, auc
+# from sklearn.metrics import roc_curve, auc
 
-# Assuming you have predicted probabilities
-y_pred_proba = tree_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class
-fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
-roc_auc = auc(fpr, tpr)
+# # Assuming you have predicted probabilities
+# y_pred_proba = tree_model.predict_proba(X_test)[:, 1]  # Probabilities for the positive class
+# fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
+# roc_auc = auc(fpr, tpr)
 
-plt.figure(figsize=(8, 6))
-plt.plot(fpr, tpr, color='blue', label=f"ROC Curve (AUC = {roc_auc:.2f})")
-plt.plot([0, 1], [0, 1], color='red', linestyle='--')  # Random guess line
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('ROC Curve')
-plt.legend()
-plt.show()
+# plt.figure(figsize=(8, 6))
+# plt.plot(fpr, tpr, color='blue', label=f"ROC Curve (AUC = {roc_auc:.2f})")
+# plt.plot([0, 1], [0, 1], color='red', linestyle='--')  # Random guess line
+# plt.xlabel('False Positive Rate')
+# plt.ylabel('True Positive Rate')
+# plt.title('ROC Curve')
+# plt.legend()
+# plt.show()
 
 
 # ## Gradient Boosting
@@ -257,49 +257,49 @@ plt.show()
 # In[19]:
 
 
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import accuracy_score
+# from sklearn.ensemble import GradientBoostingClassifier
+# from sklearn.metrics import accuracy_score
 
-# Gradient Boosting
-gb_model = GradientBoostingClassifier()
-gb_model.fit(X_train, y_train)
-y_pred_gb = gb_model.predict(X_test)
+# # Gradient Boosting
+# gb_model = GradientBoostingClassifier()
+# gb_model.fit(X_train, y_train)
+# y_pred_gb = gb_model.predict(X_test)
 
-# Evaluate
-gb_accuracy = accuracy_score(y_test, y_pred_gb)
-print(f"Gradient Boosting Accuracy: {gb_accuracy:.4f}")
+# # Evaluate
+# gb_accuracy = accuracy_score(y_test, y_pred_gb)
+# print(f"Gradient Boosting Accuracy: {gb_accuracy:.4f}")
 
 
 # In[20]:
 
 
-cm_boost = confusion_matrix(y_test, y_pred_gb)
+# cm_boost = confusion_matrix(y_test, y_pred_gb)
 
-# Plot Confusion Matrix
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm_boost, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.title('Confusion Matrix - Gradient Boosting')
-plt.show()
+# # Plot Confusion Matrix
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm_boost, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
+# plt.xlabel('Predicted')
+# plt.ylabel('True')
+# plt.title('Confusion Matrix - Gradient Boosting')
+# plt.show()
 
 
 # In[21]:
 
 
-y_pred_boost = gb_model.predict_proba(X_test)[:, 1]
+# y_pred_boost = gb_model.predict_proba(X_test)[:, 1]
 
-fpr, tpr, thresholds = roc_curve(y_test, y_pred_boost)
-roc_auc = auc(fpr, tpr)
+# fpr, tpr, thresholds = roc_curve(y_test, y_pred_boost)
+# roc_auc = auc(fpr, tpr)
 
-plt.figure(figsize=(8, 6))
-plt.plot(fpr, tpr, color='blue', label=f'{roc_auc:.2f})')
-plt.xlabel('False Positive')
-plt.ylabel('True Positive')
-plt.title('ROC Curve - Gradient Boosting')
-plt.legend(loc='lower right')
-plt.grid()
-plt.show()
+# plt.figure(figsize=(8, 6))
+# plt.plot(fpr, tpr, color='blue', label=f'{roc_auc:.2f})')
+# plt.xlabel('False Positive')
+# plt.ylabel('True Positive')
+# plt.title('ROC Curve - Gradient Boosting')
+# plt.legend(loc='lower right')
+# plt.grid()
+# plt.show()
 
 
 # ## Random Forest
@@ -321,35 +321,35 @@ print(f"Random Forest accuracy: {forest_accuracy:.4f}")
 # In[23]:
 
 
-cm_random = confusion_matrix(y_test, y_pred_forest)
+# cm_random = confusion_matrix(y_test, y_pred_forest)
 
-# Plot Confusion Matrix
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm_random, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.title('Confusion Matrix - Random Forest')
-plt.show()
+# # Plot Confusion Matrix
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm_random, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
+# plt.xlabel('Predicted')
+# plt.ylabel('True')
+# plt.title('Confusion Matrix - Random Forest')
+# plt.show()
 
 
 # In[24]:
 
 
-y_pred_random = forest_model.predict_proba(X_test)[:, 1]
+# y_pred_random = forest_model.predict_proba(X_test)[:, 1]
 
-# Compute ROC curve and AUC
-fpr, tpr, thresholds = roc_curve(y_test, y_pred_random)
-roc_auc = auc(fpr, tpr)
+# # Compute ROC curve and AUC
+# fpr, tpr, thresholds = roc_curve(y_test, y_pred_random)
+# roc_auc = auc(fpr, tpr)
 
-# Plot ROC curve
-plt.figure(figsize=(8, 6))
-plt.plot(fpr, tpr, color='blue', label=f'{roc_auc:.2f}')
-plt.xlabel('False Positive')
-plt.ylabel('True Positive')
-plt.title('ROC Curve - Random Forest')
-plt.legend(loc='upper right')
-plt.grid()
-plt.show()
+# # Plot ROC curve
+# plt.figure(figsize=(8, 6))
+# plt.plot(fpr, tpr, color='blue', label=f'{roc_auc:.2f}')
+# plt.xlabel('False Positive')
+# plt.ylabel('True Positive')
+# plt.title('ROC Curve - Random Forest')
+# plt.legend(loc='upper right')
+# plt.grid()
+# plt.show()
 
 
 # ## Logistic Regression
@@ -357,29 +357,29 @@ plt.show()
 # In[25]:
 
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 
-log_model = LogisticRegression(max_iter=1000, random_state=42)
-log_model.fit(X_train, y_train)
+# log_model = LogisticRegression(max_iter=1000, random_state=42)
+# log_model.fit(X_train, y_train)
 
-y_pred = log_model.predict(X_test)
+# y_pred = log_model.predict(X_test)
 
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+# accuracy = accuracy_score(y_test, y_pred)
+# print("Accuracy:", accuracy)
 
 
 # In[26]:
 
 
-cm_logit = confusion_matrix(y_test, y_pred)
+# cm_logit = confusion_matrix(y_test, y_pred)
 
-plt.figure(figsize=(8, 6))
-sns.heatmap(cm_logit, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
-plt.xlabel('Predicted')
-plt.ylabel('True')
-plt.title('Confusion Matrix')
-plt.show()
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(cm_logit, annot=True, fmt='d', cmap='Blues', xticklabels=["Non-Fraudulent", "Fraudulent"], yticklabels=["Non-Fraudulent", "Fraudulent"])
+# plt.xlabel('Predicted')
+# plt.ylabel('True')
+# plt.title('Confusion Matrix')
+# plt.show()
 
 
 # ## Support Vector Machines
@@ -387,27 +387,34 @@ plt.show()
 # In[ ]:
 
 
-from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score
+# from sklearn.svm import LinearSVC
+# from sklearn.metrics import accuracy_score
 
-model_smv = LinearSVC(max_iter=10000, random_state=42)
-model_smv.fit(X_train, y_train)
+# model_smv = LinearSVC(max_iter=10000, random_state=42)
+# model_smv.fit(X_train, y_train)
 
-y_pred = model_smv.predict(X_test)
+# y_pred = model_smv.predict(X_test)
 
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
+# accuracy = accuracy_score(y_test, y_pred)
+# print("Accuracy:", accuracy)
 
 
 # In[ ]:
 
 
-cm_svm = confusion_matrix(y_test, y_pred)
+# cm_svm = confusion_matrix(y_test, y_pred)
 
-plt.figure(figsize=(6, 4))
-sns.heatmap(cm_svm, annot=True, fmt='d', cmap='Blues', xticklabels=['Pos', 'Neg'], yticklabels=['Pos', 'Neg'])
-plt.title('Support Vector machine - confusion matrix')
-plt.ylabel('Predicted')
-plt.xlabel('Actual')
-plt.show()
+# plt.figure(figsize=(6, 4))
+# sns.heatmap(cm_svm, annot=True, fmt='d', cmap='Blues', xticklabels=['Pos', 'Neg'], yticklabels=['Pos', 'Neg'])
+# plt.title('Support Vector machine - confusion matrix')
+# plt.ylabel('Predicted')
+# plt.xlabel('Actual')
+# plt.show()
 
+# from sklearn.ensemble import RandomForestClassifier
+# import joblib
+
+# # Assuming forest_model is your RandomForestClassifier
+# joblib.dump(forest_model, "forest_model.pkl")  # Save the model
+# # Load the saved model
+# loaded_model = joblib.load("forest_model.pkl")
