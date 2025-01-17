@@ -4,6 +4,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import joblib
+import os
+import tempfile
 
 # Preprocessing functions
 def clean_col(dframe, columns):
@@ -45,6 +47,10 @@ st.markdown("This app predicts if a job posting is fake or legitimate based on k
 # Backend: Fetch dataset and train model
 @st.cache_resource
 def train_model():
+    temp_dir = tempfile.gettempdir()
+    model_path = f"{temp_dir}/fake_job_model.pkl"
+    feature_columns_path = f"{temp_dir}/feature_columns.pkl"
+
     # Fetch dataset
     dataset_url = "https://raw.githubusercontent.com/gitanirudh/Fake_job_posting/main/fake_job_postings.csv"
     df = pd.read_csv(dataset_url)
@@ -75,14 +81,11 @@ def train_model():
 
     # Save the feature names
     feature_columns = df_encoded_ohe.drop(columns=['fraudulent']).columns
-    joblib.dump(feature_columns, "feature_columns.pkl")
-
-    numeric_cols = df_encoded_ohe.select_dtypes(include=['float64', 'int64']).columns
+    joblib.dump(feature_columns, feature_columns_path)
 
     # Split data into features and target
-    df_no_outliers = df_encoded_ohe
-    X = df_no_outliers.drop(columns=['fraudulent'])
-    y = df_no_outliers['fraudulent']
+    X = df_encoded_ohe.drop(columns=['fraudulent'])
+    y = df_encoded_ohe['fraudulent']
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
@@ -91,11 +94,12 @@ def train_model():
     model.fit(X_train, y_train)
 
     # Save model for prediction
-    joblib.dump(model, "fake_job_model.pkl")
+    joblib.dump(model, model_path)
+    return model_path, feature_columns_path
 
-# Show spinner while training
+# Train the model
 with st.spinner("Training the model... Please wait."):
-    train_model()
+    model_path, feature_columns_path = train_model()
 st.success("Model trained successfully! You can now make predictions below.")
 
 # Step 2: User input for prediction
@@ -103,9 +107,9 @@ st.header("Make a Prediction")
 
 # Load the saved model and feature columns
 try:
-    model = joblib.load("fake_job_model.pkl")
-    feature_columns = joblib.load("feature_columns.pkl")
-except:
+    model = joblib.load(model_path)
+    feature_columns = joblib.load(feature_columns_path)
+except Exception as e:
     st.error("Error loading model or feature columns. Please ensure training is complete.")
 
 # Input form for prediction
@@ -121,29 +125,32 @@ with st.form("prediction_form"):
     submit_button = st.form_submit_button("Predict")
 
 if submit_button and model:
-    # Convert input into a DataFrame
-    input_data = pd.DataFrame({
-        "title": [title],
-        "location": [location],
-        "company_profile": [company_profile],
-        "description": [description],
-        "requirements": [requirements],
-        "benefits": [benefits],
-        "employment_type": [employment_type],
-    })
-
-    # Preprocess the input data
-    input_data = clean_col(input_data, input_data.columns)
-    input_data = imputetion(input_data)
-    input_data = convert_columns_to_categorical(input_data, input_data.columns)
-    input_data = ohe(input_data, input_data.columns)
-
-    # Align input data with feature columns
-    input_data = input_data.reindex(columns=feature_columns, fill_value=0)
-
-    # Make prediction
-    prediction = model.predict(input_data)
-    if prediction[0] == 1:
-        st.error("This job posting is predicted to be **FAKE**.")
+    if not title or not location or not description:
+        st.error("Please fill out all required fields before submitting.")
     else:
-        st.success("This job posting is predicted to be **LEGITIMATE**.")
+        # Convert input into a DataFrame
+        input_data = pd.DataFrame({
+            "title": [title],
+            "location": [location],
+            "company_profile": [company_profile],
+            "description": [description],
+            "requirements": [requirements],
+            "benefits": [benefits],
+            "employment_type": [employment_type],
+        })
+
+        # Preprocess the input data
+        input_data = clean_col(input_data, input_data.columns)
+        input_data = imputetion(input_data)
+        input_data = convert_columns_to_categorical(input_data, input_data.columns)
+        input_data = ohe(input_data, input_data.columns)
+
+        # Align input data with feature columns
+        input_data = input_data.reindex(columns=feature_columns, fill_value=0)
+
+        # Make prediction
+        prediction = model.predict(input_data)
+        if prediction[0] == 1:
+            st.error("This job posting is predicted to be **FAKE**.")
+        else:
+            st.success("This job posting is predicted to be **LEGITIMATE**.")
